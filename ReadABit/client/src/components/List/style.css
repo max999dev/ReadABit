@@ -1,0 +1,16 @@
+.list-overflow-container {
+  max-height: 620px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.list-overflow-container li * {
+  cursor: pointer;
+}
+.list-overflow-container li a {
+  color: #2A878C;
+  text-decoration: none;
+}
+
+.list-overflow-container li a span {
+  color: #333;
+}
