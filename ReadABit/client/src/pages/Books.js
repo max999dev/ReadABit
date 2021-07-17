@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import DeleteBtn from "../components/DeleteBtn";
-// import API from "../utils/API";
+import API from "../utils/API";
 import { Col, Row, Container } from "../components/Grid";
 import Card from "../components/Card";
 import { List, ListItem } from "../components/List";
@@ -14,19 +14,40 @@ class Books extends Component {
     summary: "",
   };
 
-  allBooks = (event) => {
-    // When the form is submitted, prevent its default behavior, get books update the books state
-
-    // Add code here to get all books from the database and save them to this.state.books
-
-    // API ...
+  allBooks = () => {
+    API.getBooks()
+      .then((res) =>
+        this.setState({ books: res.data, title: "", author: "", summary: "" })
+      )
+      .catch((err) => console.log(err));
   };
-  
+
   componentDidMount() {
     this.allBooks();
   }
 
+  handleValues = (event) => {
+    const { name, value } = event.target;
+    console.log(name, value)
+    this.setState({
+      [name]: value,
+    });
+  };
+  handleSubmit = (event) => {
+    event.preventDefault();
+    if (this.state.title && this.state.author) {
+      API.saveBook({
+        title: this.state.title,
+        author: this.state.author,
+        summary: this.state.summary,
+      })
+      //.then((res) => this.allBooks())
+        //.catch((err) => console.log(err));
+    }
+  };
+
   render() {
+    console.log(this.state.books);
     return (
       <Container fluid>
         <Row>
@@ -35,10 +56,25 @@ class Books extends Component {
               <h1>What Books Should I Read?</h1>
             </Card>
             <form>
-              <Input name="title" placeholder="Title (required)" />
-              <Input name="author" placeholder="Author (required)" />
-              <TextArea name="synopsis" placeholder="Synopsis (Optional)" />
-              <FormBtn>Submit Book</FormBtn>
+              <Input
+                name="title"
+                placeholder="Title (required)"
+                onChange={this.handleValues}
+                value={this.state.title}
+              />
+              <Input
+                name="author"
+                placeholder="Author (required)"
+                onChange={this.handleValues}
+                value={this.state.author}
+              />
+              <TextArea
+                name="summary"
+                placeholder="Synopsis (Optional)"
+                onChange={this.handleValues}
+                value={this.state.summary}
+              />
+              <FormBtn onClick={this.handleSubmit}>Submit Book</FormBtn>
             </form>
           </Col>
           <Col size="md-6 sm-12">
@@ -52,7 +88,7 @@ class Books extends Component {
                     <a href={"/books/" + book._id}>
                       {book.title} by <span>{book.author}</span>
                     </a>
-                    <DeleteBtn />
+                    <DeleteBtn onClick={() => console.log(event.target)} />
                   </ListItem>
                 ))}
               </List>
