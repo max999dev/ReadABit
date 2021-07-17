@@ -88,7 +88,7 @@ class Books extends Component {
                     <a href={"/books/" + book._id}>
                       {book.title} by <span>{book.author}</span>
                     </a>
-                    <DeleteBtn onClick={() => console.log(event.target)} />
+                    <DeleteBtn onClick={(event) => console.log(event.target)} />
                   </ListItem>
                 ))}
               </List>
